@@ -1,5 +1,5 @@
 ---
-swagger: '2.0'
+swagger: "2.0"
 
 ################################################################################
 #                              API Information                                 #
@@ -7,7 +7,7 @@ swagger: '2.0'
 info:
   version: "3.3"
   title: Redmine API
-  description: |  
+  description: |
     Redmine exposes some of its data through a REST API. This API provides 
     access and basic CRUD operations (create, update, delete) for the resources 
     described below. The API supports both XML and JSON formats.
@@ -17,9 +17,9 @@ info:
 ################################################################################
 # during dev, should point to your local machine
 host: localhost:8080
-# basePath prefixes all resource paths 
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -42,9 +42,9 @@ externalDocs:
 ################################################################################
 tags:
   - name: Issues
-    description: 'Status : Stable, Note : , Availlability : 1.0'
+    description: "Status : Stable, Note : , Availlability : 1.0"
   - name: Projects
-    description: 'Status : Stable, Note : , Availlability : 1.0'
+    description: "Status : Stable, Note : , Availlability : 1.0"
 
 ################################################################################
 #                                  Security                                    #
@@ -65,8 +65,9 @@ paths:
     x-swagger-router-controller: getIssues
     x-a127-apply: {}
     parameters:
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/format"
     get:
+      operationId: "IssuesList"
       tags:
         - Issues
       summary: Listing issues
@@ -76,53 +77,44 @@ paths:
 
       parameters:
         #Parameters
-        - 
-          name: offset
+        - name: offset
           in: query
           description: |
-            skip this number of issues in response (optional)  
+            skip this number of issues in response (optional)
 
           type: integer
           allowEmptyValue: true
-        - 
-          name: limit
+        - name: limit
           in: query
           description: number of issues per page (optional)
           type: integer
         #Optional filters
-        - 
-          name: sort
+        - name: sort
           in: query
-          description: 'column to sort with. Append :desc to invert the order.'
+          description: "column to sort with. Append :desc to invert the order."
           type: string
           collectionFormat: csv
-        - 
-          name: project_id
+        - name: project_id
           in: query
           description: get issues from the project with the given id (a numeric value, not a project identifier).
           type: integer
-        - 
-          name: subproject_id
+        - name: subproject_id
           in: query
           description: get issues from the subproject with the given id. You can use project_id=XXX&subproject_id=!* to get only the issues of a given project and none of its subprojects.
           type: string
-        - 
-          name: tracker_id
+        - name: tracker_id
           in: query
           description: get issues from the tracker with the given id
           type: integer
-        - 
-          name: status_id
+        - name: status_id
           in: query
-          description: 'get issues with the given status id only. Possible values: open, closed, * to get open and closed issues, status id'
+          description: "get issues with the given status id only. Possible values: open, closed, * to get open and closed issues, status id"
           type: string
-        - 
-          name: assigned_to_id
+        - name: assigned_to_id
           in: query
           description: get issues which are assigned to the given user id. me can be used instead an ID to fetch all issues from the logged in user (via API key or HTTP auth)
           type: string
-        - 
-          name: cf_x
+        - name: cf_x
           in: query
           description: get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)
           type: string
@@ -130,7 +122,7 @@ paths:
         "200":
           description: |
             Success
-            
+
           schema:
             type: object
             required:
@@ -142,7 +134,7 @@ paths:
               issues:
                 type: array
                 items:
-                  $ref: '#/definitions/Issue'
+                  $ref: "#/definitions/Issue"
               total_count:
                 type: integer
               offset:
@@ -151,25 +143,24 @@ paths:
                 type: integer
           examples:
             application/json:
-              issues: 
-                - 
-                  id: 23359
-                  project: 
+              issues:
+                - id: 23359
+                  project:
                     id: 1
                     name: "Redmine"
-                  tracker: 
+                  tracker:
                     id: 3
                     name: "Patch"
-                  status: 
+                  status:
                     id: 1
                     name: "New"
-                  priority: 
+                  priority:
                     id: 4
                     name: "Normal"
-                  author: 
+                  author:
                     id: 332
                     name: "Go MAEDA"
-                  category: 
+                  category:
                     id: 12
                     name: "Translations"
                   subject: "Change Japanese translation for label_commits_per_author"
@@ -177,36 +168,33 @@ paths:
                   done_ratio: 0
                   created_on: "2016-07-18T12:13:59Z"
                   updated_on: "2016-07-18T12:13:59Z"
-                - 
-                  id: 23357
-                  project: 
+                - id: 23357
+                  project:
                     id: 1
                     name: "Redmine"
-                  tracker: 
+                  tracker:
                     id: 1
                     name: "Defect"
-                  status: 
+                  status:
                     id: 10
                     name: "Needs feedback"
-                  priority: 
+                  priority:
                     id: 5
                     name: "High"
-                  author: 
+                  author:
                     id: 115781
                     name: "Sebastian Paluch"
-                  category: 
+                  category:
                     id: 9
                     name: "Email notifications"
                   subject: "Broken links in email notification"
                   description: "It seems that Redmine version 3.3.0 has broken links generation in email notifications for news (at least), with 3.2.0 noone was reporting such problem.\r\n\r\nI have a news publish that includes following description:\r\n\r\n<pre>\r\nNew software version#1267 has been released. It is ...\r\n\r\n{{include(myproject:100-0_Alpha_2_(rev_93029))}}\r\n\r\nh3. Feel free to report new issues\r\n\r\n* \"myproject\":/redmine/projects/myproject/issues/new\r\n</pre>\r\n\r\nIn email notification \r\n* the first link to version#1267 has been generated correctly, \r\n* the last one is missing server name that should be added automatically: \r\nhttp://redmine/projects/myproject/issues/new but should be http://host/redmine/projects/myproject/issues/new\r\n\r\nIncluded wiki (myproject:100-0_Alpha_2_(rev_93029)) is in different project then the news and includes:\r\n\r\n<pre>\r\nh3. Requirements\r\n\r\n* Service Pack version#1272 or newer\r\n\r\n{{include(myproject:Update_Instruction)}}\r\n\r\n...\r\n\r\n</pre>\r\n\r\nIn email notification \r\n* the link to version#1272 has been generated wrong, it is missing server name: \r\nhttp://redmine/versions/1272 but should be http://host/redmine/versions/1272\r\n\r\n\r\nIncluded wiki (myproject:Update_Instruction) is in different project then the news and includes:\r\n\r\n<pre>\r\nh3. Download\r\n\r\nAll pre-production software releases are available on the \"shared network location\":file://host\\full\\path\\to\\directory. \r\n\r\n...\r\n\r\n</pre>\r\n\r\nIn email notification \r\n* the link to \"shared network location\" has been generated wrong, all \"\\\" has been replaced with a code %5: \r\nfile://\\\\host%5full%5path%5to%5directory\r\nthe link does not work and for some reason, it is not even possible to copy it from Outlook into clipboard\r\n\r\n<pre>\r\nEnvironment:\r\n  Redmine version                3.3.0.stable\r\n  Ruby version                   2.1.8-p440 (2015-12-16) [i386-mingw32]\r\n  Rails version                  4.2.6\r\n  Environment                    production\r\n  Database adapter               Mysql2\r\nSCM:\r\n  Subversion                     1.8.11\r\n  Git                            2.7.4\r\n  Filesystem                     \r\nRedmine plugins:\r\n  computed_custom_field          0.0.2\r\n  inside_avatar                  1.0.2\r\n  issue_filters                  1.0.1\r\n  redmine_agile                  1.4.1-3\r\n  redmine_checklists             3.1.1-1\r\n  redmine_custom_columns         1.1.0\r\n  redmine_favorite_projects      2.0.2-2\r\n  redmine_version_fixed_issues   1.0.1\r\n  sidebar_hide                   0.0.7\r\n</pre>"
                   done_ratio: 0
-                  custom_fields: 
-                    - 
-                      id: 2
+                  custom_fields:
+                    - id: 2
                       name: "Resolution"
                       value: ""
-                    - 
-                      id: 4
+                    - id: 4
                       name: "Affected version"
                       value: "110"
                   created_on: "2016-07-18T10:53:45Z"
@@ -216,57 +204,58 @@ paths:
               limit: 2
             application/xml:
               <issues total_count="4579" offset="0" limit="2" type="array">
-                <issue>
-                  <id>23359</id>
-                  <project id="1" name="Redmine"/>
-                  <tracker id="3" name="Patch"/>
-                  <status id="1" name="New"/>
-                  <priority id="4" name="Normal"/>
-                  <author id="332" name="Go MAEDA"/>
-                  <category id="12" name="Translations"/>
-                  <subject>
-                  Change Japanese translation for label_commits_per_author
-                  </subject>
-                  <description>
-                  </description>
-                  <start_date/>
-                  <due_date/>
-                  <done_ratio>0</done_ratio>
-                  <estimated_hours/>
-                  <created_on>2016-07-18T12:13:59Z</created_on>
-                  <updated_on>2016-07-18T12:13:59Z</updated_on>
-                  <closed_on/>
-                </issue>
-                <issue>
-                  <id>23357</id>
-                  <project id="1" name="Redmine"/>
-                  <tracker id="1" name="Defect"/>
-                  <status id="10" name="Needs feedback"/>
-                  <priority id="5" name="High"/>
-                  <author id="115781" name="Sebastian Paluch"/>
-                  <category id="9" name="Email notifications"/>
-                  <subject>Broken links in email notification</subject>
-                  <description>
-                  </description>
-                  <start_date/>
-                  <due_date/>
-                  <done_ratio>0</done_ratio>
-                  <estimated_hours/>
-                  <custom_fields type="array">
-                  <custom_field id="2" name="Resolution">
-                  <value/>
-                  </custom_field>
-                  <custom_field id="4" name="Affected version">
-                  <value>110</value>
-                  </custom_field>
-                  </custom_fields>
-                  <created_on>2016-07-18T10:53:45Z</created_on>
-                  <updated_on>2016-07-18T12:14:17Z</updated_on>
-                  <closed_on/>
-                </issue>
+              <issue>
+              <id>23359</id>
+              <project id="1" name="Redmine"/>
+              <tracker id="3" name="Patch"/>
+              <status id="1" name="New"/>
+              <priority id="4" name="Normal"/>
+              <author id="332" name="Go MAEDA"/>
+              <category id="12" name="Translations"/>
+              <subject>
+              Change Japanese translation for label_commits_per_author
+              </subject>
+              <description>
+              </description>
+              <start_date/>
+              <due_date/>
+              <done_ratio>0</done_ratio>
+              <estimated_hours/>
+              <created_on>2016-07-18T12:13:59Z</created_on>
+              <updated_on>2016-07-18T12:13:59Z</updated_on>
+              <closed_on/>
+              </issue>
+              <issue>
+              <id>23357</id>
+              <project id="1" name="Redmine"/>
+              <tracker id="1" name="Defect"/>
+              <status id="10" name="Needs feedback"/>
+              <priority id="5" name="High"/>
+              <author id="115781" name="Sebastian Paluch"/>
+              <category id="9" name="Email notifications"/>
+              <subject>Broken links in email notification</subject>
+              <description>
+              </description>
+              <start_date/>
+              <due_date/>
+              <done_ratio>0</done_ratio>
+              <estimated_hours/>
+              <custom_fields type="array">
+              <custom_field id="2" name="Resolution">
+              <value/>
+              </custom_field>
+              <custom_field id="4" name="Affected version">
+              <value>110</value>
+              </custom_field>
+              </custom_fields>
+              <created_on>2016-07-18T10:53:45Z</created_on>
+              <updated_on>2016-07-18T12:14:17Z</updated_on>
+              <closed_on/>
+              </issue>
               </issues>
 
     post:
+      operationId: "IssueCreate"
       tags:
         - Issues
       summary: Creating an issue
@@ -274,7 +263,7 @@ paths:
         |aa|bb|
         |--|--|
         |aa|bb|
-    
+
         Creating an issue
       externalDocs:
         description: aaaa
@@ -284,24 +273,24 @@ paths:
           name: BodyJson
           description: |
             bodyJsondescription
-            
+
             |aa|bb|
             |--|--|
             |aa|bb|
           schema:
             title: schematitle
             description: |
-            
+
               schemadescription
-              
+
               |aa|bb|
               |--|--|
               |aa|bb|
-              
+
             externalDocs:
               description: aaaa
               url: http://www.google.com
-              
+
             type: object
             required:
               - issue
@@ -309,13 +298,13 @@ paths:
               issue:
                 title: titleissue
                 description: |
-                
+
                   issuedescription
-                
+
                   |aa|bb|cc|
                   |--|--|--|
                   |aa|bb|cc|
-                  
+
                 externalDocs:
                   description: issueextention
                   url: http://www.google.com
@@ -377,9 +366,10 @@ paths:
 
   /issues/{issue_id}.{format}:
     parameters:
-      - $ref: '#/parameters/issue_id'
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/issue_id"
+      - $ref: "#/parameters/format"
     get:
+      operationId: "IssueGet"
       tags:
         - Issues
       summary: Showing an issue
@@ -391,9 +381,10 @@ paths:
               - issue
             properties:
               issue:
-                $ref: '#/definitions/Issue'
+                $ref: "#/definitions/Issue"
           description: Success
     put:
+      operationId: "IssueUpdate"
       tags:
         - Issues
       summary: Updating an issue
@@ -401,6 +392,7 @@ paths:
         "200":
           description: Success
     delete:
+      operationId: "IssueDelete"
       tags:
         - Issues
       summary: Deleting an issue
@@ -412,9 +404,10 @@ paths:
           description: Success
   /issues/{issue_id}/watchers.{format}:
     parameters:
-      - $ref: '#/parameters/issue_id'
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/issue_id"
+      - $ref: "#/parameters/format"
     post:
+      operationId: "IssueWatcherAdd"
       tags:
         - Issues
       summary: Adding a watcher
@@ -435,10 +428,11 @@ paths:
           description: Success
   /issues/{issue_id}/watchers/{user_id}.{format}:
     parameters:
-      - $ref: '#/parameters/issue_id'
-      - $ref: '#/parameters/user_id'
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/issue_id"
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/format"
     delete:
+      operationId: "IssueWatcherRemove"
       tags:
         - Issues
       summary: Removing a watcher
@@ -447,8 +441,9 @@ paths:
           description: Success
   /projects.{format}:
     parameters:
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/format"
     get:
+      operationId: "ProjectsList"
       tags:
         - Projects
       summary: Listing projects
@@ -474,7 +469,7 @@ paths:
               projects:
                 type: array
                 items:
-                  $ref: '#/definitions/Project'
+                  $ref: "#/definitions/Project"
               total_count:
                 type: integer
               offset:
@@ -482,6 +477,7 @@ paths:
               limit:
                 type: integer
     post:
+      operationId: "ProjectCreate"
       tags:
         - Projects
       summary: Creating a project
@@ -491,9 +487,10 @@ paths:
           description: Success
   /projects/{project_id}.{format}:
     parameters:
-      - $ref: '#/parameters/project_id'
-      - $ref: '#/parameters/format'
+      - $ref: "#/parameters/project_id"
+      - $ref: "#/parameters/format"
     get:
+      operationId: "ProjectGet"
       tags:
         - Projects
       summary: Showing a project
@@ -502,6 +499,7 @@ paths:
         "200":
           description: Success
     put:
+      operationId: "ProjectPut"
       tags:
         - Projects
       summary: Updating a project
@@ -510,6 +508,7 @@ paths:
         "200":
           description: Success
     delete:
+      operationId: "ProjectDelete"
       tags:
         - Projects
       summary: Deleting a project
@@ -517,7 +516,6 @@ paths:
       responses:
         "200":
           description: Success
-
 
 ################################################################################
 #                                 Parameters Definitions                       #
@@ -551,7 +549,7 @@ parameters:
     description: The user identifier number
     type: string
     required: true
-    
+
 ################################################################################
 #                                 Definitions                                  #
 ################################################################################
@@ -576,15 +574,15 @@ definitions:
       id:
         type: integer
       project:
-        $ref: '#/definitions/IdName'
+        $ref: "#/definitions/IdName"
       tracker:
-        $ref: '#/definitions/IdName'
+        $ref: "#/definitions/IdName"
       status:
-        $ref: '#/definitions/IdName'
+        $ref: "#/definitions/IdName"
       priority:
-        $ref: '#/definitions/IdName'
+        $ref: "#/definitions/IdName"
       author:
-        $ref: '#/definitions/IdName'
+        $ref: "#/definitions/IdName"
       subject:
         type: string
       description:
@@ -609,25 +607,25 @@ definitions:
         type: integer
       name:
         type: string
-# {
-#   "projects": [
-#     {
-#       "id": 1,
-#       "name": "tet",
-#       "identifier": "tet",
-#       "description": "",
-#       "status": 5,
-#       "is_public": true,
-#       "trackers": [],
-#       "issue_categories": [],
-#       "created_on": "2016-07-17T06:36:12Z",
-#       "updated_on": "2016-07-17T06:36:12Z"
-#     }
-#   ],
-#   "total_count": 2,
-#   "offset": 0,
-#   "limit": 25
-# }
+  # {
+  #   "projects": [
+  #     {
+  #       "id": 1,
+  #       "name": "tet",
+  #       "identifier": "tet",
+  #       "description": "",
+  #       "status": 5,
+  #       "is_public": true,
+  #       "trackers": [],
+  #       "issue_categories": [],
+  #       "created_on": "2016-07-17T06:36:12Z",
+  #       "updated_on": "2016-07-17T06:36:12Z"
+  #     }
+  #   ],
+  #   "total_count": 2,
+  #   "offset": 0,
+  #   "limit": 25
+  # }
 
   Project:
     type: object
